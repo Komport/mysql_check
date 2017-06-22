@@ -12,7 +12,7 @@ class DBConn:
             self.connection = MySQLdb.connect(host = self.IP,port=self.Port,user="login",passwd="Password")
             self.crs = self.connection.cursor()
         elif local == 2:
-            self.connection = MySQLdb.connect(user="chksrv", port=13306, db="login",passwd="Password")
+            self.connection = MySQLdb.connect(user="login", port=3306, db="login",passwd="Password")
             self.dict_crs = self.connection.cursor(cursorclass=MySQLdb.cursors.DictCursor)
             self.crs = self.connection.cursor()
         print("Connection is open now")
