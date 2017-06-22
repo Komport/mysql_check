@@ -1,0 +1,45 @@
+import MySQLdb
+import MySQLdb.cursors
+
+class DBConn:
+
+    def __init__(self, IP, Port):
+        self.IP = IP
+        self.Port = Port
+
+    def open_connection(self,local = 1):
+        if local == 1:
+            self.connection = MySQLdb.connect(host = self.IP,port=self.Port,user="login",passwd="Password")
+            self.crs = self.connection.cursor()
+        elif local == 2:
+            self.connection = MySQLdb.connect(user="chksrv", port=13306, db="login",passwd="Password")
+            self.dict_crs = self.connection.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+            self.crs = self.connection.cursor()
+        print("Connection is open now")
+        
+        
+    def close_connection(self):
+        self.crs.close()
+        self.connection.close()
+        print("Connection is closed now")
+
+    def get_data(self,query,is_dict=0):
+        if is_dict == 1:
+            self.dict_crs.execute(query)
+            result = self.dict_crs.fetchall()
+        else:
+            self.crs.execute(query)
+            result = self.crs.fetchall()
+         
+        return result
+    
+    def insert_data(self,query,data):
+        
+        self.crs.execute(query,data)
+        self.connection.commit()
+        
+    def truncate_table(self,tbl):
+        query = "truncate table "+tbl
+        self.crs.execute(query)
+        self.connection.commit()
+        print ("Truncate done")
